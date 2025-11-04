@@ -15,4 +15,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  test: {
+    environment: 'jsdom', // Entorno de navegador simulado para pruebas de Vue
+    globals: true, 
+  }
 })
