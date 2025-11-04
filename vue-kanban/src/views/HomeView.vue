@@ -1,43 +1,58 @@
 <script setup>
+// 1. Importar el componente de la lista (asegúrate de usar el nombre "KanbanList")
 import KanbanList from '@/components/KanbanList.vue'
+// 2. Importar el Store de Pinia
+import { useBoardStore } from '@/stores/boardStore'
 
-// TAREAS MOCK: Por ahora usamos datos estáticos
-const todoCards = [
-  { id: 1, title: 'Diseñar interfaz del tablero' },
-  { id: 2, title: 'Configurar Pinia Store' },
-]
-const inProgressCards = [
-  { id: 3, title: 'Implementar funcionalidad de arrastrar y soltar' },
-]
-const doneCards = [
-  { id: 4, title: 'Crear proyecto inicial de Vue/Vite' },
-]
+// Inicializar y usar el store
+// Esto nos da acceso a 'boardStore.lists' y 'boardStore.moveCard'
+const boardStore = useBoardStore()
+
+// 3. ¡Hemos eliminado todas las variables de 'TAREAS MOCK' estáticas!
+
 </script>
 
 <template>
   <div class="kanban-board">
-    <h1>Mi Tablero Kanban con Vue.js</h1>
+    <h1>Mi Tablero Kanban con Vue.js (Estado Pinia)</h1>
     
-    <List listTitle="To Do" :cards="todoCards" />
-    <List listTitle="In Progress" :cards="inProgressCards" />
-    <List listTitle="Done" :cards="doneCards" />
-
+    <div class="list-container-wrapper">
+      <KanbanList 
+        v-for="list in boardStore.lists"
+        :key="list.id"
+        :listId="list.id" 
+        :listTitle="list.title" 
+        :cards="list.cards" 
+      />
+    </div>
+    
   </div>
 </template>
 
 <style>
+/* Estilos */
 .kanban-board {
   padding: 20px;
-  background-color: #0079bf; /* Fondo azul de Trello */
+  background-color: #0079bf;
   min-height: 100vh;
-  display: flex; /* Para poner las listas en línea */
-  gap: 10px;
-  align-items: flex-start; /* Para que las listas no se estiren */
-  overflow-x: auto; /* Para scroll horizontal si hay muchas listas */
+  /* CAMBIO: Usaremos flex-direction: column para que el título esté arriba */
+  /* Aunque Trello lo hace horizontal, para separar el título del área de listas es mejor hacer dos contenedores. */
+  display: flex;
+  flex-direction: column; /* Nuevo: organiza los hijos verticalmente */
 }
+
 .kanban-board h1 {
   color: white;
-  margin-right: 20px;
+  margin-bottom: 20px; /* Le damos espacio inferior */
   font-size: 24px;
+  /* Eliminamos margin-right: 20px; que ya no es necesario con el layout vertical */
+}
+
+/* Nuevo contenedor para las listas, así volvemos al flex horizontal */
+.list-container-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  overflow-x: auto; /* Para scroll horizontal si hay muchas listas */
 }
 </style>
