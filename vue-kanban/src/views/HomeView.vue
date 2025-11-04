@@ -14,7 +14,7 @@ const boardStore = useBoardStore()
 
 <template>
   <div class="kanban-board">
-    <h1>Mi Tablero Kanban con Vue.js (Estado Pinia)</h1>
+    <h1>Mi Tablero Kanban con Vue.js</h1>
     
     <div class="list-container-wrapper">
       <KanbanList 

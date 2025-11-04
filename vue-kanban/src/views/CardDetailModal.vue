@@ -104,7 +104,8 @@ function saveChanges() {
 .modal-content h2 {
     margin-top: 0;
     margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #000000;
+    color: #000;
     padding-bottom: 10px;
 }
 form label {
@@ -112,6 +113,7 @@ form label {
     font-weight: bold;
     margin-top: 15px;
     margin-bottom: 5px;
+    color: #111111;
 }
 form input[type="text"],
 form textarea {
