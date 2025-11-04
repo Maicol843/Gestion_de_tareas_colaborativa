@@ -63,5 +63,29 @@ export const useBoardStore = defineStore('board', () => {
     }
   }
 
-  return { lists, moveCard, addCard }
+  /**
+   * Getter que encuentra una tarjeta por su ID.
+   */
+  function getCardById(cardId) {
+    for (const list of lists.value) {
+      const card = list.cards.find(c => c.id === cardId)
+      if (card) {
+        return card
+      }
+    }
+    return null // Retorna null si no se encuentra
+  }
+
+  /**
+   * Acción para actualizar el título y la descripción de una tarjeta.
+   */
+  function updateCard(cardId, newTitle, newDescription) {
+    const card = getCardById(cardId)
+    if (card) {
+      card.title = newTitle
+      card.description = newDescription || '' // Asegura que no sea null
+    }
+  }
+
+  return { lists, moveCard, addCard, getCardById, updateCard }
 })

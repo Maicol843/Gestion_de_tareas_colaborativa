@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import CardDetailModal from '../views/CardDetailModal.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,6 +18,13 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
     },
+    {
+      // Ruta dinámica para el modal de la tarjeta
+      path: '/card/:id',
+      name: 'cardDetail',
+      component: CardDetailModal,
+      props: true // Permite pasar el 'id' como prop al componente CardDetailModal
+    }
   ],
 })
 
