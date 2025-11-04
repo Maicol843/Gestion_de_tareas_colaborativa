@@ -66,8 +66,15 @@ El proyecto se abrirá en tu navegador en http://localhost:5173/
 <br>
 <br>
 
+<p align="center">
+  <img src="vue-kanban/src/assets/background_1.png" alt="Captura del Tablero Kanban funcional" width="700"/>
+</p>
+<br>
+<br>
+
 **👤 AUTOR**
 <br>
 [Maicol Daniel Mamani Chalco]
 <br>
 * Github: [https://github.com/Maicol843/]
+* Linkrdin: [https://www.linkedin.com/in/maicolchalco]
