@@ -1,6 +1,7 @@
 // src/stores/boardStore.js
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { nanoid } from 'nanoid'
 
 // --- MOCK DATA (Datos Iniciales Estáticos) ---
 const mockLists = [
@@ -47,5 +48,20 @@ export const useBoardStore = defineStore('board', () => {
     destinationList.cards.splice(newIndex, 0, cardToMove) 
   }
 
-  return { lists, moveCard }
+  /**
+   * Agrega una nueva tarjeta a una lista específica.
+   */
+  function addCard(listId, title) {
+    const list = lists.value.find(l => l.id === listId)
+    if (list) {
+      list.cards.push({
+        // Usamos nanoid para generar un ID único para la nueva tarjeta
+        id: nanoid(), 
+        title: title,
+        description: '' // Dejamos la descripción vacía por ahora
+      })
+    }
+  }
+
+  return { lists, moveCard, addCard }
 })

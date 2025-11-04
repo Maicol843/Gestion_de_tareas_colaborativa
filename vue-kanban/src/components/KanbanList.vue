@@ -6,72 +6,75 @@ import { ref } from 'vue'
 const boardStore = useBoardStore()
 
 const props = defineProps({
-  // NUEVA: ID de la lista, crucial para el manejo de estado en Pinia
-  listId: {
-    type: String,
-    required: true
-  },
-  listTitle: {
-    type: String,
-    required: true
-  },
-  cards: {
-    type: Array,
-    default: () => []
-  }
+  listId: { /* ... */ },
+  listTitle: { /* ... */ },
+  cards: { /* ... */ }
 })
 
-// Estado local para mostrar un borde cuando se arrastra sobre la lista (indicador visual)
 const isDraggingOver = ref(false)
+// ESTADOS NUEVOS para el formulario
+const isAddingCard = ref(false) // Controla si el formulario es visible
+const newCardTitle = ref('') // Almacena el título de la nueva tarjeta
 
+// ---------------- LÓGICA DE AÑADIR TARJETA ----------------
+function handleAddCard() {
+  if (newCardTitle.value.trim() === '') {
+    // No añadir si el campo está vacío
+    return
+  }
 
-// ---------------- DRAG AND DROP HANDLERS ----------------
+  // 1. Llama a la acción de Pinia para agregar la tarjeta
+  boardStore.addCard(props.listId, newCardTitle.value.trim())
 
-// 1. Permite soltar elementos sobre esta lista
-function handleDragOver(event) {
-  event.preventDefault()
-  isDraggingOver.value = true // Activa el indicador visual
+  // 2. Limpia el formulario y lo oculta
+  newCardTitle.value = ''
+  isAddingCard.value = false
 }
 
-// 2. Limpia el indicador visual
+function closeForm() {
+  isAddingCard.value = false
+  newCardTitle.value = ''
+}
+// ---------------- DRAG AND DROP HANDLERS (Iguales) ----------------
+// ... (handleDragOver, handleDragLeave, handleDrop) ...
+function handleDragOver(event) {
+  event.preventDefault()
+  isDraggingOver.value = true 
+}
+
 function handleDragLeave() {
   isDraggingOver.value = false
 }
 
-// 3. Lógica de soltar la tarjeta
 function handleDrop(event) {
   event.preventDefault()
-  isDraggingOver.value = false // Desactiva el indicador visual
+  isDraggingOver.value = false 
 
-  // Recuperar los datos guardados en KanbanCard.vue
   const cardId = event.dataTransfer.getData('cardId')
   const sourceListId = event.dataTransfer.getData('sourceListId') 
 
-  const destinationListId = props.listId // El ID de la lista actual (destino)
-
-  // Lógica de índice: para simplificar la primera implementación, se coloca al final
+  const destinationListId = props.listId
   const newIndex = props.cards.length 
 
   if (cardId) {
-    // Llamar a la acción de Pinia para mover el dato real
     boardStore.moveCard(cardId, sourceListId, destinationListId, newIndex)
   }
 }
+
 </script>
 
 <template>
   <div 
     class="list-container"
-    
     @dragover="handleDragOver"
     @dragleave="handleDragLeave"
     @drop="handleDrop"
-  
     :class="{ 'drag-over': isDraggingOver }"
   >
     <header>
       <h3>{{ listTitle }} ({{ cards.length }})</h3>
     </header>
+    
     <div class="cards-wrapper">
       <KanbanCard 
         v-for="card in cards" 
@@ -79,7 +82,25 @@ function handleDrop(event) {
         :card="card"
         :sourceListId="listId" 
       />
-      <button class="add-card-btn">+ Añadir una tarjeta</button>
+      
+      <div v-if="isAddingCard" class="add-card-form">
+        <textarea
+          v-model="newCardTitle"
+          placeholder="Introduce un título para esta tarjeta..."
+          rows="3"
+          autofocus
+          @keyup.enter.prevent="handleAddCard"
+        ></textarea>
+        <div class="form-actions">
+          <button @click="handleAddCard" class="btn-primary">Añadir tarjeta</button>
+          <button @click="closeForm" class="btn-close">X</button>
+        </div>
+      </div>
+
+      <button v-else @click="isAddingCard = true" class="add-card-btn">
+        + Añadir una tarjeta
+      </button>
+      
     </div>
   </div>
 </template>
@@ -120,5 +141,43 @@ header h3 {
 }
 .add-card-btn:hover {
   background-color: #dcdfe4;
+}
+
+/* ESTILOS PARA EL FORMULARIO */
+.add-card-form {
+  padding: 8px 0;
+}
+.add-card-form textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 8px;
+  resize: none;
+  box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25);
+}
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+.btn-primary {
+  background-color: #5aac44;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-primary:hover {
+  background-color: #61bd4f;
+}
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #5e6c84;
 }
 </style>
