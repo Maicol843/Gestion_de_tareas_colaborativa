@@ -77,4 +77,4 @@ El proyecto se abrirá en tu navegador en http://localhost:5173/
 [Maicol Daniel Mamani Chalco]
 <br>
 * Github: [https://github.com/Maicol843/]
-* Linkrdin: [https://www.linkedin.com/in/maicolchalco]
+* Linkedin: [https://www.linkedin.com/in/maicolchalco]
